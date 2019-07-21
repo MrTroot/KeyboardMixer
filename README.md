@@ -9,7 +9,9 @@ You can also add two custom applications to change the volume of, which will tri
 
 While changing an application's volume, a small indicator will appear temporarily, showing the application volume in a manner to the Windows master volume slider. The location of this slider is configurable in the settings.
 
-![Slider](https://i.imgur.com/FPNJ8IX.png "Slider")
+
+
+![Slider](https://i.imgur.com/FPNJ8IX.png "Slider") ![Keyboard](https://i.imgur.com/jWiJCiS.png "Keyboard")
 <br>
 
 ------------

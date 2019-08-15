@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using KeyboardMixer;
+using System.Linq;
 
 namespace KeyboardMixer
 {
@@ -10,9 +10,8 @@ namespace KeyboardMixer
 
         //The popup slider when the volume is changed
         private PopupForm popupForm;
-        //Keep caches of application groups and their volumes, as calling for them repeatedly creates a lot of overhead
-        private Dictionary<Guid, String> groupCache;
-        private Dictionary<Guid, float> volumeCache;
+        //Keep cache of sessions and their volumes, as calling for them repeatedly creates a lot of overhead
+        private List<AppVolume> appCache;
         private int ticksRenewedCacheAt;
         //Application settings
         public SerializableSettings settings;
@@ -196,37 +195,31 @@ namespace KeyboardMixer
 
         private void TryStepApplicationVolume(String configuredIdentifier, float stepAmount)
         {
-            float? newVolume = null;
-            foreach (KeyValuePair<Guid, String> entry in groupCache)
+
+            //get sessions whose identifier match the given one
+            var matchingApps = appCache.Where(app => app.Identifier.IndexOf(configuredIdentifier, System.StringComparison.CurrentCultureIgnoreCase) >= 0).ToList();
+
+            if (matchingApps.Any())
             {
-                //check for an audio session matching the configured application
-                if (entry.Value.IndexOf(configuredIdentifier, System.StringComparison.CurrentCultureIgnoreCase) >= 0)
-                {
-                    if (volumeCache.TryGetValue(entry.Key, out float currentVolume))
-                    {
-                        newVolume = currentVolume + stepAmount;
-                        newVolume = Math.Min(100, newVolume.Value);
-                        newVolume = Math.Max(0, newVolume.Value);
-                        if (currentVolume != newVolume)
-                        {
-                            VolumeHook.SetApplicationVolumeByGroup(entry.Key, newVolume);
-                            volumeCache[entry.Key] = newVolume.Value;
-                        }
-                    }
-                }
-            }
-            //this way we only set the slider once if there are multiple processes for one identifier
-            if (newVolume.HasValue)
-            {
+                float newVolume = matchingApps.First().Volume + stepAmount;
+                newVolume = Math.Min(100, newVolume);
+                newVolume = Math.Max(0, newVolume);
+                //adjust cached volumes to the new volume
+                matchingApps.ForEach(app => app.Volume = newVolume);
+                //set volume for all groups matching 
+                matchingApps.Select(app => app.Guid).Distinct().ToList().ForEach(guid =>
+                    VolumeHook.SetApplicationVolumeByGroup(guid, newVolume)
+                );
+
                 popupForm.ShowSlider((int)newVolume);
             }
+
         }
 
         //Renews the application and volume cache
         private void RenewCachedValues()
         {
-            groupCache = VolumeHook.getSessionGroups();
-            volumeCache = VolumeHook.getVolumes();
+            appCache = VolumeHook.getVolumes();
             ticksRenewedCacheAt = Environment.TickCount;
         }
 

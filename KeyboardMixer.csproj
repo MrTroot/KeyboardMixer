@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppVolume.cs" />
     <Compile Include="config\ConfigManager.cs" />
     <Compile Include="hook\GlobalKeyboardHook.cs" />
     <Compile Include="MainForm.cs">

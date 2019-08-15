@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KeyboardMixer
 {
@@ -533,12 +530,12 @@ namespace KeyboardMixer
             }
         }
 
-        public static Dictionary<Guid, String> getSessionGroups()
+        public static List<AppVolume> getVolumes()
         {
             IAudioSessionEnumerator sessionEnumerator = getSessionEnumerator();
             try
             {
-                var map = new Dictionary<Guid, String>();
+                var newVolumes = new List<AppVolume>();
 
                 int count;
                 sessionEnumerator.GetCount(out count);
@@ -551,15 +548,28 @@ namespace KeyboardMixer
                     {
                         sessionEnumerator.GetSession(i, out ctl);
 
-                        // NOTE: we could also use the app name from ctl.GetDisplayName()
-                        Guid cguid;
-                        ctl.GetGroupingParam(out cguid);
                         String identifier;
                         ctl.GetSessionIdentifier(out identifier);
 
-                        //Console.WriteLine(group + " " + identifier);
+                        int pid;
+                        ctl.GetProcessId(out pid);
 
-                        map[cguid] = identifier;
+                        Guid guid;
+                        ctl.GetGroupingParam(out guid);
+
+                        float volume;
+                        ISimpleAudioVolume volumeControl = ctl as ISimpleAudioVolume;
+                        volumeControl.GetMasterVolume(out volume);
+                        volume *= 100;
+
+                        newVolumes.Add(new AppVolume()
+                        {
+                            Identifier = identifier,
+                            Pid = pid,
+                            Guid = guid,
+                            Volume = volume,
+                        });
+
                     }
                     finally
                     {
@@ -567,49 +577,7 @@ namespace KeyboardMixer
                     }
                 }
 
-                return map;
-
-            }
-            finally
-            {
-                if (sessionEnumerator != null) Marshal.ReleaseComObject(sessionEnumerator);
-            }
-        }
-
-        public static Dictionary<Guid, float> getVolumes()
-        {
-            IAudioSessionEnumerator sessionEnumerator = getSessionEnumerator();
-            try
-            {
-                var map = new Dictionary<Guid, float>();
-
-                int count;
-                sessionEnumerator.GetCount(out count);
-
-                // enumerate and add the sessions
-                for (int i = 0; i < count; ++i)
-                {
-                    IAudioSessionControl2 ctl = null;
-                    try
-                    {
-                        sessionEnumerator.GetSession(i, out ctl);
-
-                        int cpid;
-                        ctl.GetProcessId(out cpid);
-                        Guid cguid;
-                        ctl.GetGroupingParam(out cguid);
-
-                        float volume = GetApplicationVolume(cpid).Value;
-
-                        map[cguid] = volume;
-                    }
-                    finally
-                    {
-                        if (ctl != null) Marshal.ReleaseComObject(ctl);
-                    }
-                }
-
-                return map;
+                return newVolumes;
 
             }
             finally

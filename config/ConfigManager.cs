@@ -16,32 +16,48 @@ namespace KeyboardMixer
         private static readonly string FILE_PATH = Path.Combine(DIRECTORY_PATH, "settings.xml");
         public static void WriteConfig(SerializableSettings settings)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(SerializableSettings));
-            TextWriter writer = new StreamWriter(FILE_PATH);
-            serializer.Serialize(writer, settings);
-            writer.Close();
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(SerializableSettings));
+                TextWriter writer = new StreamWriter(FILE_PATH);
+                serializer.Serialize(writer, settings);
+                writer.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
 
         public static SerializableSettings ReadConfig()
         {
-            Directory.CreateDirectory(DIRECTORY_PATH);
-            if (!File.Exists(FILE_PATH))
+            try
             {
+                Directory.CreateDirectory(DIRECTORY_PATH);
+                if (!File.Exists(FILE_PATH))
+                {
+                    return WriteDefaults();
+                }
+
+                XmlSerializer serializer = new XmlSerializer(typeof(SerializableSettings));
+                FileStream fs = new FileStream(FILE_PATH, FileMode.Open);
+                SerializableSettings settings = (SerializableSettings)serializer.Deserialize(fs);
+                fs.Close();
+                return settings;
+            }
+            catch (Exception e)
+            {
+                //on read error (e.g. blank or invalid config) write defaults instead
+                Console.WriteLine(e.ToString());
                 return WriteDefaults();
             }
-
-            XmlSerializer serializer = new XmlSerializer(typeof(SerializableSettings));
-            FileStream fs = new FileStream(FILE_PATH, FileMode.Open);
-            SerializableSettings settings = (SerializableSettings) serializer.Deserialize(fs);
-            fs.Close();
-            return settings;
         }
 
         public static SerializableSettings WriteDefaults()
         {
-            SerializableSettings settings = SerializableSettings.GetDefaults();
-            WriteConfig(settings);
-            return settings;
+            SerializableSettings defaultSettings = SerializableSettings.GetDefaults();
+            WriteConfig(defaultSettings);
+            return defaultSettings;
         }
     }
 }

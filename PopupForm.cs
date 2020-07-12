@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 
 namespace KeyboardMixer
@@ -22,6 +17,7 @@ namespace KeyboardMixer
         //Cache the current process when are changing the volume of
         //This way we dont have multiple calls to get the name and icon when the volume is changed
         int currentPID;
+        int currentVolume;
 
         public PopupForm(MainForm mainForm)
         {
@@ -124,13 +120,16 @@ namespace KeyboardMixer
                 this.labelAppName.Text = FirstLetterToUpper(ProcessHook.GetProcessNameByPID(pid));
             }
 
-            this.trackBar1.Value = volume;
+            //this.volumeSlider.Value = volume;
+            this.currentVolume = volume;
 
             if (!this.Visible)
             {
                 this.Show();
             }
             ResetTimer();
+
+            labelBoxSlider.Invalidate();
 
         }
 
@@ -143,6 +142,32 @@ namespace KeyboardMixer
                 return char.ToUpper(str[0]) + str.Substring(1);
 
             return str.ToUpper();
+        }
+
+        private void labelBoxSlider_Paint(object sender, PaintEventArgs e)
+        {
+            SolidBrush brushWhite = new System.Drawing.SolidBrush(Color.White);
+            SolidBrush brushBlue = new System.Drawing.SolidBrush(Color.FromArgb(0, 118, 215));
+            
+
+            float yScaled = 1 - (currentVolume / 100F);
+            yScaled *= labelBoxSlider.Height;
+            int yPos = Math.Min(labelBoxSlider.Height - labelBoxSlider.Width, (int)yScaled);
+
+            Rectangle rectWhite = new Rectangle(0, yPos, labelBoxSlider.Width, labelBoxSlider.Width);
+            Rectangle rectBlue = new Rectangle(0, yPos, labelBoxSlider.Width, labelBoxSlider.Height - yPos);
+
+            e.Graphics.FillRectangle(brushBlue, rectBlue);
+            e.Graphics.FillRectangle(brushWhite, rectWhite);
+
+
+            brushWhite.Dispose();
+            brushBlue.Dispose();
+        }
+
+        private void PopupForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 

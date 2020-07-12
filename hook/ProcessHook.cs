@@ -52,7 +52,6 @@ namespace KeyboardMixer
 
         public static String GetProcessNameByPID(int pid)
         {
-            Console.WriteLine(Process.GetProcessById(pid).ProcessName);
             return Process.GetProcessById(pid).ProcessName;
         }
 

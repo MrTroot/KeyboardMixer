@@ -10,7 +10,7 @@ namespace KeyboardMixer
     static class Program
     {
 
-        private static string appGuid = "d2a47dfe-fc58-4b77-8ac7-0c6f14ee2516";
+        private static readonly String appGuid = "d2a47dfe-fc58-4b77-8ac7-0c6f14ee2516";
 
         /// <summary>
         /// The main entry point for the application.

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,6 +36,24 @@ namespace KeyboardMixer
             GetWindowThreadProcessId(hwnd, out pid);
             Process p = Process.GetProcessById((int)pid);
             return Path.GetFileName(GetProcessFilename(p));
+        }
+
+        public static Icon GetIconByPID(int pid)
+        {
+            try
+            {
+                return Icon.ExtractAssociatedIcon(Process.GetProcessById((int)pid).MainModule.FileName);
+            }
+            catch (Exception)
+            {
+                return SystemIcons.Question;
+            }
+        }
+
+        public static String GetProcessNameByPID(int pid)
+        {
+            Console.WriteLine(Process.GetProcessById(pid).ProcessName);
+            return Process.GetProcessById(pid).ProcessName;
         }
 
         public static String GetProcessFilename(Process p)

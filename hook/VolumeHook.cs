@@ -473,61 +473,61 @@ namespace KeyboardMixer
         public static void SetApplicationVolumeByGroup(Guid groupGUID, float? level)
         {
             if (level == null) return;
+
+            IMMDeviceEnumerator deviceEnumerator = null;
+            IAudioSessionEnumerator sessionEnumerator = null;
+            IAudioSessionManager2 mgr = null;
+            IMMDevice speakers = null;
+            try
             {
-                IMMDeviceEnumerator deviceEnumerator = null;
-                IAudioSessionEnumerator sessionEnumerator = null;
-                IAudioSessionManager2 mgr = null;
-                IMMDevice speakers = null;
-                try
+                // get the speakers (1st render + multimedia) device
+                deviceEnumerator = (IMMDeviceEnumerator)(new MMDeviceEnumerator());
+                deviceEnumerator.GetDefaultAudioEndpoint(EDataFlow.eRender, ERole.eMultimedia, out speakers);
+
+                // activate the session manager. we need the enumerator
+                Guid IID_IAudioSessionManager2 = typeof(IAudioSessionManager2).GUID;
+                object o;
+                speakers.Activate(ref IID_IAudioSessionManager2, 0, IntPtr.Zero, out o);
+                mgr = (IAudioSessionManager2)o;
+
+                // enumerate sessions for on this device
+                mgr.GetSessionEnumerator(out sessionEnumerator);
+                int count;
+                sessionEnumerator.GetCount(out count);
+
+                // search for an audio session with the required process-id
+                ISimpleAudioVolume volumeControl = null;
+                for (int i = 0; i < count; ++i)
                 {
-                    // get the speakers (1st render + multimedia) device
-                    deviceEnumerator = (IMMDeviceEnumerator)(new MMDeviceEnumerator());
-                    deviceEnumerator.GetDefaultAudioEndpoint(EDataFlow.eRender, ERole.eMultimedia, out speakers);
-
-                    // activate the session manager. we need the enumerator
-                    Guid IID_IAudioSessionManager2 = typeof(IAudioSessionManager2).GUID;
-                    object o;
-                    speakers.Activate(ref IID_IAudioSessionManager2, 0, IntPtr.Zero, out o);
-                    mgr = (IAudioSessionManager2)o;
-
-                    // enumerate sessions for on this device
-                    mgr.GetSessionEnumerator(out sessionEnumerator);
-                    int count;
-                    sessionEnumerator.GetCount(out count);
-
-                    // search for an audio session with the required process-id
-                    ISimpleAudioVolume volumeControl = null;
-                    for (int i = 0; i < count; ++i)
+                    IAudioSessionControl2 ctl = null;
+                    try
                     {
-                        IAudioSessionControl2 ctl = null;
-                        try
-                        {
-                            sessionEnumerator.GetSession(i, out ctl);
+                        sessionEnumerator.GetSession(i, out ctl);
 
-                            Guid cguid;
-                            ctl.GetGroupingParam(out cguid);
+                        Guid cguid;
+                        ctl.GetGroupingParam(out cguid);
 
-                            if (cguid == groupGUID)
-                            {
-                                Guid emptyGuid = Guid.Empty;
-                                volumeControl = ctl as ISimpleAudioVolume;
-                                volumeControl.SetMasterVolume(Convert.ToSingle(level) / 100, ref emptyGuid);
-                            }
-                        }
-                        finally
+                        if (cguid == groupGUID)
                         {
-                            if (ctl != null) Marshal.ReleaseComObject(ctl);
+                            Guid emptyGuid = Guid.Empty;
+                            volumeControl = ctl as ISimpleAudioVolume;
+                            volumeControl.SetMasterVolume(Convert.ToSingle(level) / 100, ref emptyGuid);
                         }
                     }
-                }
-                finally
-                {
-                    if (speakers != null) Marshal.ReleaseComObject(speakers);
-                    if (mgr != null) Marshal.ReleaseComObject(mgr);
-                    if (sessionEnumerator != null) Marshal.ReleaseComObject(sessionEnumerator);
-                    if (deviceEnumerator != null) Marshal.ReleaseComObject(deviceEnumerator);
+                    finally
+                    {
+                        if (ctl != null) Marshal.ReleaseComObject(ctl);
+                    }
                 }
             }
+            finally
+            {
+                if (speakers != null) Marshal.ReleaseComObject(speakers);
+                if (mgr != null) Marshal.ReleaseComObject(mgr);
+                if (sessionEnumerator != null) Marshal.ReleaseComObject(sessionEnumerator);
+                if (deviceEnumerator != null) Marshal.ReleaseComObject(deviceEnumerator);
+            }
+
         }
 
         public static List<AppVolume> getVolumes()
@@ -562,12 +562,16 @@ namespace KeyboardMixer
                         volumeControl.GetMasterVolume(out volume);
                         volume *= 100;
 
+                        String dispName;
+                        ctl.GetDisplayName(out dispName);
+
                         newVolumes.Add(new AppVolume()
                         {
                             Identifier = identifier,
                             Pid = pid,
                             Guid = guid,
                             Volume = volume,
+                            DisplayName = dispName
                         });
 
                     }
@@ -682,7 +686,7 @@ namespace KeyboardMixer
         int GetDisplayName([MarshalAs(UnmanagedType.LPWStr)] out string pRetVal);
 
         [PreserveSig]
-        int SetDisplayName([MarshalAs(UnmanagedType.LPWStr)]string Value, [MarshalAs(UnmanagedType.LPStruct)] Guid EventContext);
+        int SetDisplayName([MarshalAs(UnmanagedType.LPWStr)] string Value, [MarshalAs(UnmanagedType.LPStruct)] Guid EventContext);
 
         [PreserveSig]
         int GetIconPath([MarshalAs(UnmanagedType.LPWStr)] out string pRetVal);
@@ -736,7 +740,7 @@ namespace KeyboardMixer
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int GetChannelCount(
-            [Out] [MarshalAs(UnmanagedType.U4)] out UInt32 channelCount);
+            [Out][MarshalAs(UnmanagedType.U4)] out UInt32 channelCount);
 
         /// <summary>
         /// Sets the master volume level of the audio stream, in decibels.
@@ -746,8 +750,8 @@ namespace KeyboardMixer
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int SetMasterVolumeLevel(
-            [In] [MarshalAs(UnmanagedType.R4)] float level,
-            [In] [MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
+            [In][MarshalAs(UnmanagedType.R4)] float level,
+            [In][MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
 
         /// <summary>
         /// Sets the master volume level, expressed as a normalized, audio-tapered value.
@@ -757,8 +761,8 @@ namespace KeyboardMixer
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int SetMasterVolumeLevelScalar(
-            [In] [MarshalAs(UnmanagedType.R4)] float level,
-            [In] [MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
+            [In][MarshalAs(UnmanagedType.R4)] float level,
+            [In][MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
 
         /// <summary>
         /// Gets the master volume level of the audio stream, in decibels.
@@ -767,7 +771,7 @@ namespace KeyboardMixer
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int GetMasterVolumeLevel(
-            [Out] [MarshalAs(UnmanagedType.R4)] out float level);
+            [Out][MarshalAs(UnmanagedType.R4)] out float level);
 
         /// <summary>
         /// Gets the master volume level, expressed as a normalized, audio-tapered value.
@@ -776,7 +780,7 @@ namespace KeyboardMixer
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int GetMasterVolumeLevelScalar(
-            [Out] [MarshalAs(UnmanagedType.R4)] out float level);
+            [Out][MarshalAs(UnmanagedType.R4)] out float level);
 
         /// <summary>
         /// Sets the volume level, in decibels, of the specified channel of the audio stream.
@@ -787,9 +791,9 @@ namespace KeyboardMixer
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int SetChannelVolumeLevel(
-            [In] [MarshalAs(UnmanagedType.U4)] UInt32 channelNumber,
-            [In] [MarshalAs(UnmanagedType.R4)] float level,
-            [In] [MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
+            [In][MarshalAs(UnmanagedType.U4)] UInt32 channelNumber,
+            [In][MarshalAs(UnmanagedType.R4)] float level,
+            [In][MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
 
         /// <summary>
         /// Sets the normalized, audio-tapered volume level of the specified channel in the audio stream.
@@ -800,9 +804,9 @@ namespace KeyboardMixer
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int SetChannelVolumeLevelScalar(
-            [In] [MarshalAs(UnmanagedType.U4)] UInt32 channelNumber,
-            [In] [MarshalAs(UnmanagedType.R4)] float level,
-            [In] [MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
+            [In][MarshalAs(UnmanagedType.U4)] UInt32 channelNumber,
+            [In][MarshalAs(UnmanagedType.R4)] float level,
+            [In][MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
 
         /// <summary>
         /// Gets the volume level, in decibels, of the specified channel in the audio stream.
@@ -812,8 +816,8 @@ namespace KeyboardMixer
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int GetChannelVolumeLevel(
-            [In] [MarshalAs(UnmanagedType.U4)] UInt32 channelNumber,
-            [Out] [MarshalAs(UnmanagedType.R4)] out float level);
+            [In][MarshalAs(UnmanagedType.U4)] UInt32 channelNumber,
+            [Out][MarshalAs(UnmanagedType.R4)] out float level);
 
         /// <summary>
         /// Gets the normalized, audio-tapered volume level of the specified channel of the audio stream.
@@ -823,8 +827,8 @@ namespace KeyboardMixer
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int GetChannelVolumeLevelScalar(
-            [In] [MarshalAs(UnmanagedType.U4)] UInt32 channelNumber,
-            [Out] [MarshalAs(UnmanagedType.R4)] out float level);
+            [In][MarshalAs(UnmanagedType.U4)] UInt32 channelNumber,
+            [Out][MarshalAs(UnmanagedType.R4)] out float level);
 
         /// <summary>
         /// Sets the muting state of the audio stream.
@@ -834,8 +838,8 @@ namespace KeyboardMixer
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int SetMute(
-            [In] [MarshalAs(UnmanagedType.Bool)] Boolean isMuted,
-            [In] [MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
+            [In][MarshalAs(UnmanagedType.Bool)] Boolean isMuted,
+            [In][MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
 
         /// <summary>
         /// Gets the muting state of the audio stream.
@@ -844,7 +848,7 @@ namespace KeyboardMixer
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int GetMute(
-            [Out] [MarshalAs(UnmanagedType.Bool)] out Boolean isMuted);
+            [Out][MarshalAs(UnmanagedType.Bool)] out Boolean isMuted);
 
         /// <summary>
         /// Gets information about the current step in the volume range.
@@ -854,8 +858,8 @@ namespace KeyboardMixer
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int GetVolumeStepInfo(
-            [Out] [MarshalAs(UnmanagedType.U4)] out UInt32 step,
-            [Out] [MarshalAs(UnmanagedType.U4)] out UInt32 stepCount);
+            [Out][MarshalAs(UnmanagedType.U4)] out UInt32 step,
+            [Out][MarshalAs(UnmanagedType.U4)] out UInt32 stepCount);
 
         /// <summary>
         /// Increases the volume level by one step.
@@ -864,7 +868,7 @@ namespace KeyboardMixer
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int VolumeStepUp(
-            [In] [MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
+            [In][MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
 
         /// <summary>
         /// Decreases the volume level by one step.
@@ -873,7 +877,7 @@ namespace KeyboardMixer
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int VolumeStepDown(
-            [In] [MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
+            [In][MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
 
         /// <summary>
         /// Queries the audio endpoint device for its hardware-supported functions.
@@ -882,7 +886,7 @@ namespace KeyboardMixer
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int QueryHardwareSupport(
-            [Out] [MarshalAs(UnmanagedType.U4)] out UInt32 hardwareSupportMask);
+            [Out][MarshalAs(UnmanagedType.U4)] out UInt32 hardwareSupportMask);
 
         /// <summary>
         /// Gets the volume range of the audio stream, in decibels.
@@ -893,9 +897,9 @@ namespace KeyboardMixer
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int GetVolumeRange(
-            [Out] [MarshalAs(UnmanagedType.R4)] out float volumeMin,
-            [Out] [MarshalAs(UnmanagedType.R4)] out float volumeMax,
-            [Out] [MarshalAs(UnmanagedType.R4)] out float volumeStep);
+            [Out][MarshalAs(UnmanagedType.R4)] out float volumeMin,
+            [Out][MarshalAs(UnmanagedType.R4)] out float volumeMax,
+            [Out][MarshalAs(UnmanagedType.R4)] out float volumeStep);
     }
 
     #endregion

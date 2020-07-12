@@ -12,5 +12,6 @@ namespace KeyboardMixer
         public int Pid { get; set; }
         public Guid Guid { get; set; }
         public float Volume { get; set; }
+        public String DisplayName { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace KeyboardMixer
         //The popup slider when the volume is changed
         private PopupForm popupForm;
         //Keep cache of sessions and their volumes, as calling for them repeatedly creates a lot of overhead
-        private List<AppVolume> appCache;
+        private List<AppVolume> appVolumeCache;
         private int ticksRenewedCacheAt;
         //Application settings
         public SerializableSettings settings;
@@ -66,11 +66,6 @@ namespace KeyboardMixer
 
         void OnKeyDown(object sender, KeyEventArgs e)
         {
-            //Renew cache if it is at least 4 seconds old
-            if (Environment.TickCount - ticksRenewedCacheAt > 4000)
-            {
-                RenewCachedValues();
-            }
 
             //Check for modifiers
             if (e.KeyCode == Keys.LControlKey)
@@ -195,9 +190,14 @@ namespace KeyboardMixer
 
         private void TryStepApplicationVolume(String configuredIdentifier, float stepAmount)
         {
+            //Renew volume cache if it is at least 4 seconds old
+            if (Environment.TickCount - ticksRenewedCacheAt > 4000)
+            {
+                RenewCachedValues();
+            }
 
             //get sessions whose identifier match the given one
-            var matchingApps = appCache.Where(app => app.Identifier.IndexOf(configuredIdentifier, System.StringComparison.CurrentCultureIgnoreCase) >= 0).ToList();
+            var matchingApps = appVolumeCache.Where(app => app.Identifier.IndexOf(configuredIdentifier, System.StringComparison.CurrentCultureIgnoreCase) >= 0).ToList();
 
             if (matchingApps.Any())
             {
@@ -206,12 +206,12 @@ namespace KeyboardMixer
                 newVolume = Math.Max(0, newVolume);
                 //adjust cached volumes to the new volume
                 matchingApps.ForEach(app => app.Volume = newVolume);
-                //set volume for all groups matching 
+                //set volume for all matching groups
                 matchingApps.Select(app => app.Guid).Distinct().ToList().ForEach(guid =>
                     VolumeHook.SetApplicationVolumeByGroup(guid, newVolume)
                 );
 
-                popupForm.ShowSlider((int)newVolume);
+                popupForm.ShowSlider((int)newVolume, matchingApps.First().Pid);
             }
 
         }
@@ -219,7 +219,7 @@ namespace KeyboardMixer
         //Renews the application and volume cache
         private void RenewCachedValues()
         {
-            appCache = VolumeHook.getVolumes();
+            appVolumeCache = VolumeHook.getVolumes();
             ticksRenewedCacheAt = Environment.TickCount;
         }
 
@@ -293,6 +293,7 @@ namespace KeyboardMixer
             Show();
             this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
+            this.Focus();
         }
 
         #endregion

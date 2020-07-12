@@ -12,9 +12,16 @@ namespace KeyboardMixer
 {
     public partial class PopupForm : Form
     {
+        //Reference to the application's main form
+        MainForm mainForm;
+
+        //Timer to remove the popup after a couple of seconds
         Timer timer = new Timer();
         int counter = 0;
-        MainForm mainForm;
+
+        //Cache the current process when are changing the volume of
+        //This way we dont have multiple calls to get the name and icon when the volume is changed
+        int currentPID;
 
         public PopupForm(MainForm mainForm)
         {
@@ -83,7 +90,7 @@ namespace KeyboardMixer
             }
             else if (settings.popupSide == PopupSide.Right)
             {
-                this.Left = correctScreen.WorkingArea.Right - 51; //width hardcoded since this.Width was wrong sometimes?
+                this.Left = correctScreen.WorkingArea.Right - 76; //width hardcoded since this.Width was wrong sometimes?
                 this.Top = correctScreen.WorkingArea.Bottom - this.Height;
             }
             
@@ -104,10 +111,21 @@ namespace KeyboardMixer
             timer.Start();
         }
 
-        public void ShowSlider(int volume)
+        public void ShowSlider(int volume, int pid)
         {
+            //only update icon and name if it has changed
+            if(this.currentPID != pid)
+            {
+                this.currentPID = pid;
+
+                Bitmap icon = ProcessHook.GetIconByPID(pid).ToBitmap();
+                pictureBox.Image = icon;
+
+                this.labelAppName.Text = FirstLetterToUpper(ProcessHook.GetProcessNameByPID(pid));
+            }
+
             this.trackBar1.Value = volume;
-            
+
             if (!this.Visible)
             {
                 this.Show();
@@ -116,5 +134,17 @@ namespace KeyboardMixer
 
         }
 
+        public static string FirstLetterToUpper(String str)
+        {
+            if (str == null)
+                return null;
+
+            if (str.Length > 1)
+                return char.ToUpper(str[0]) + str.Substring(1);
+
+            return str.ToUpper();
+        }
     }
+
+    
 }

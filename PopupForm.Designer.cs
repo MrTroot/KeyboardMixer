@@ -29,34 +29,75 @@
         private void InitializeComponent()
         {
             this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.labelBoxBg = new System.Windows.Forms.Label();
+            this.labelAppName = new System.Windows.Forms.Label();
+            this.pictureBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // trackBar1
             // 
-            this.trackBar1.AutoSize = false;
             this.trackBar1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.trackBar1.CausesValidation = false;
             this.trackBar1.Enabled = false;
-            this.trackBar1.Location = new System.Drawing.Point(2, 2);
+            this.trackBar1.Location = new System.Drawing.Point(16, 1);
             this.trackBar1.Maximum = 100;
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.trackBar1.Size = new System.Drawing.Size(47, 225);
+            this.trackBar1.Size = new System.Drawing.Size(45, 225);
             this.trackBar1.TabIndex = 0;
             this.trackBar1.TabStop = false;
             this.trackBar1.TickFrequency = 5;
             this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.Both;
+            // 
+            // labelBoxBg
+            // 
+            this.labelBoxBg.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.labelBoxBg.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.labelBoxBg.Location = new System.Drawing.Point(1, 1);
+            this.labelBoxBg.Margin = new System.Windows.Forms.Padding(0);
+            this.labelBoxBg.Name = "labelBoxBg";
+            this.labelBoxBg.Size = new System.Drawing.Size(74, 283);
+            this.labelBoxBg.TabIndex = 1;
+            this.labelBoxBg.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // labelAppName
+            // 
+            this.labelAppName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.labelAppName.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelAppName.ForeColor = System.Drawing.Color.White;
+            this.labelAppName.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.labelAppName.Location = new System.Drawing.Point(1, 262);
+            this.labelAppName.Margin = new System.Windows.Forms.Padding(0);
+            this.labelAppName.Name = "labelAppName";
+            this.labelAppName.Size = new System.Drawing.Size(74, 21);
+            this.labelAppName.TabIndex = 2;
+            this.labelAppName.Text = "AppName";
+            this.labelAppName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // pictureBox
+            // 
+            this.pictureBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.pictureBox.Location = new System.Drawing.Point(21, 227);
+            this.pictureBox.Name = "pictureBox";
+            this.pictureBox.Size = new System.Drawing.Size(32, 32);
+            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox.TabIndex = 3;
+            this.pictureBox.TabStop = false;
             // 
             // PopupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Red;
-            this.ClientSize = new System.Drawing.Size(51, 229);
+            this.ClientSize = new System.Drawing.Size(76, 284);
             this.ControlBox = false;
+            this.Controls.Add(this.pictureBox);
+            this.Controls.Add(this.labelAppName);
             this.Controls.Add(this.trackBar1);
-            this.Enabled = false;
-            this.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.Controls.Add(this.labelBoxBg);
+            this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -65,13 +106,19 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.TopMost = true;
+            this.TransparencyKey = System.Drawing.Color.Red;
             this.VisibleChanged += new System.EventHandler(this.PopupForm_VisibleChanged);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
         public System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.Label labelBoxBg;
+        private System.Windows.Forms.Label labelAppName;
+        private System.Windows.Forms.PictureBox pictureBox;
     }
 }

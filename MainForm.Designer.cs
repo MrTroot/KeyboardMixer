@@ -103,6 +103,7 @@
             // labelCtrlAlt
             // 
             this.labelCtrlAlt.AutoSize = true;
+            this.labelCtrlAlt.ForeColor = System.Drawing.SystemColors.ControlText;
             this.labelCtrlAlt.Location = new System.Drawing.Point(29, 61);
             this.labelCtrlAlt.Name = "labelCtrlAlt";
             this.labelCtrlAlt.Size = new System.Drawing.Size(96, 13);

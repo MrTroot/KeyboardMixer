@@ -11,7 +11,7 @@ While changing an application's volume, a small indicator will appear temporaril
 
 
 
-![Slider](https://i.imgur.com/pWwCWgU.gif "Slider")
+![Slider](https://i.imgur.com/3FJlQb9.gif "Slider")
 <br>
 
 ------------

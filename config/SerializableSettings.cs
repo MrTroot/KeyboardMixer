@@ -1,4 +1,7 @@
-﻿using System;
+﻿using KeyboardMixer.config;
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace KeyboardMixer
 {
@@ -6,8 +9,7 @@ namespace KeyboardMixer
     public enum PopupSide { Left, Right }
     public class SerializableSettings
     {
-        public String ctrlShiftProgram;
-        public String ctrlAltProgram;
+        public List<MixerKeybindEntry> keybinds;
         public int volumeStep;
         public Boolean startMinimized;
         public PopupScreen popupScreen;
@@ -17,8 +19,23 @@ namespace KeyboardMixer
         {
             SerializableSettings settings = new SerializableSettings
             {
-                ctrlShiftProgram = "Discord.exe",
-                ctrlAltProgram = "firefox.exe",
+                keybinds = new List<MixerKeybindEntry> {
+                    new MixerKeybindEntry
+                    {
+                        KeyList = new Keys[]{Keys.LControlKey, Keys.LShiftKey},
+                        ProcessName = "discord.exe"
+                    },
+                    new MixerKeybindEntry
+                    {
+                        KeyList = new Keys[]{Keys.LControlKey, Keys.LMenu},
+                        ProcessName = "firefox.exe"
+                    },
+                    new MixerKeybindEntry
+                    {
+                        KeyList = new Keys[]{Keys.LControlKey, Keys.LWin},
+                        ProcessName = "spotify.exe"
+                    }
+                },
                 volumeStep = 2,
                 startMinimized = false,
                 popupScreen = PopupScreen.Primary,

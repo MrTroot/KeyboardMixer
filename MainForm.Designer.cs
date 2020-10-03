@@ -30,86 +30,31 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.labelCtrlShift = new System.Windows.Forms.Label();
-            this.textBoxCtrlShiftProgram = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBoxCtrlAltProgram = new System.Windows.Forms.TextBox();
-            this.labelCtrlAlt = new System.Windows.Forms.Label();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemExit = new System.Windows.Forms.ToolStripMenuItem();
             this.label2 = new System.Windows.Forms.Label();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownVolumeIncrement = new System.Windows.Forms.NumericUpDown();
             this.checkBoxStartMinimized = new System.Windows.Forms.CheckBox();
             this.comboBoxPopupScreen = new System.Windows.Forms.ComboBox();
             this.comboBoxPopupSide = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.dataGridViewKeybinds = new System.Windows.Forms.DataGridView();
+            this.groupBoxKeybinds = new System.Windows.Forms.GroupBox();
+            this.buttonAddKeybind = new System.Windows.Forms.Button();
+            this.textBoxAddProcess = new System.Windows.Forms.TextBox();
+            this.textBoxAddKeybind = new System.Windows.Forms.TextBox();
+            this.labelAddKeybind = new System.Windows.Forms.Label();
+            this.Keybind = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Process = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Delete = new System.Windows.Forms.DataGridViewButtonColumn();
             this.contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVolumeIncrement)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewKeybinds)).BeginInit();
+            this.groupBoxKeybinds.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // labelCtrlShift
-            // 
-            this.labelCtrlShift.AutoSize = true;
-            this.labelCtrlShift.Location = new System.Drawing.Point(20, 35);
-            this.labelCtrlShift.Name = "labelCtrlShift";
-            this.labelCtrlShift.Size = new System.Drawing.Size(105, 13);
-            this.labelCtrlShift.TabIndex = 0;
-            this.labelCtrlShift.Text = "Ctrl + Shift + Volume:";
-            this.labelCtrlShift.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // textBoxCtrlShiftProgram
-            // 
-            this.textBoxCtrlShiftProgram.Location = new System.Drawing.Point(131, 32);
-            this.textBoxCtrlShiftProgram.Name = "textBoxCtrlShiftProgram";
-            this.textBoxCtrlShiftProgram.Size = new System.Drawing.Size(139, 20);
-            this.textBoxCtrlShiftProgram.TabIndex = 1;
-            this.textBoxCtrlShiftProgram.TabStop = false;
-            this.textBoxCtrlShiftProgram.Text = "Discord.exe";
-            this.textBoxCtrlShiftProgram.TextChanged += new System.EventHandler(this.TextBoxCtrlShiftProgram_TextChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(53, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(72, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Ctrl + Volume:";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(131, 6);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(139, 20);
-            this.textBox1.TabIndex = 3;
-            this.textBox1.TabStop = false;
-            this.textBox1.Text = "Current Application";
-            // 
-            // textBoxCtrlAltProgram
-            // 
-            this.textBoxCtrlAltProgram.Location = new System.Drawing.Point(131, 58);
-            this.textBoxCtrlAltProgram.Name = "textBoxCtrlAltProgram";
-            this.textBoxCtrlAltProgram.Size = new System.Drawing.Size(139, 20);
-            this.textBoxCtrlAltProgram.TabIndex = 5;
-            this.textBoxCtrlAltProgram.TabStop = false;
-            this.textBoxCtrlAltProgram.Text = "firefox.exe";
-            this.textBoxCtrlAltProgram.TextChanged += new System.EventHandler(this.TextBoxCtrlAltProgram_TextChanged);
-            // 
-            // labelCtrlAlt
-            // 
-            this.labelCtrlAlt.AutoSize = true;
-            this.labelCtrlAlt.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.labelCtrlAlt.Location = new System.Drawing.Point(29, 61);
-            this.labelCtrlAlt.Name = "labelCtrlAlt";
-            this.labelCtrlAlt.Size = new System.Drawing.Size(96, 13);
-            this.labelCtrlAlt.TabIndex = 4;
-            this.labelCtrlAlt.Text = "Ctrl + Alt + Volume:";
-            this.labelCtrlAlt.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // notifyIcon1
             // 
@@ -136,41 +81,41 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(29, 145);
+            this.label2.Location = new System.Drawing.Point(13, 254);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(95, 13);
             this.label2.TabIndex = 6;
             this.label2.Text = "Volume Increment:";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // numericUpDown1
+            // numericUpDownVolumeIncrement
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(131, 143);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
+            this.numericUpDownVolumeIncrement.Location = new System.Drawing.Point(108, 252);
+            this.numericUpDownVolumeIncrement.Maximum = new decimal(new int[] {
             8,
             0,
             0,
             0});
-            this.numericUpDown1.Minimum = new decimal(new int[] {
+            this.numericUpDownVolumeIncrement.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(36, 20);
-            this.numericUpDown1.TabIndex = 7;
-            this.numericUpDown1.TabStop = false;
-            this.numericUpDown1.Value = new decimal(new int[] {
+            this.numericUpDownVolumeIncrement.Name = "numericUpDownVolumeIncrement";
+            this.numericUpDownVolumeIncrement.Size = new System.Drawing.Size(36, 20);
+            this.numericUpDownVolumeIncrement.TabIndex = 7;
+            this.numericUpDownVolumeIncrement.TabStop = false;
+            this.numericUpDownVolumeIncrement.Value = new decimal(new int[] {
             2,
             0,
             0,
             0});
-            this.numericUpDown1.ValueChanged += new System.EventHandler(this.NumericUpDown1_ValueChanged);
+            this.numericUpDownVolumeIncrement.ValueChanged += new System.EventHandler(this.numericUpDownVolumeIncrement_ValueChanged);
             // 
             // checkBoxStartMinimized
             // 
             this.checkBoxStartMinimized.AutoSize = true;
-            this.checkBoxStartMinimized.Location = new System.Drawing.Point(173, 145);
+            this.checkBoxStartMinimized.Location = new System.Drawing.Point(160, 254);
             this.checkBoxStartMinimized.Name = "checkBoxStartMinimized";
             this.checkBoxStartMinimized.Size = new System.Drawing.Size(97, 17);
             this.checkBoxStartMinimized.TabIndex = 8;
@@ -180,8 +125,9 @@
             // 
             // comboBoxPopupScreen
             // 
+            this.comboBoxPopupScreen.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPopupScreen.FormattingEnabled = true;
-            this.comboBoxPopupScreen.Location = new System.Drawing.Point(131, 84);
+            this.comboBoxPopupScreen.Location = new System.Drawing.Point(108, 198);
             this.comboBoxPopupScreen.Name = "comboBoxPopupScreen";
             this.comboBoxPopupScreen.Size = new System.Drawing.Size(139, 21);
             this.comboBoxPopupScreen.TabIndex = 9;
@@ -189,8 +135,9 @@
             // 
             // comboBoxPopupSide
             // 
+            this.comboBoxPopupSide.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPopupSide.FormattingEnabled = true;
-            this.comboBoxPopupSide.Location = new System.Drawing.Point(131, 110);
+            this.comboBoxPopupSide.Location = new System.Drawing.Point(108, 225);
             this.comboBoxPopupSide.Name = "comboBoxPopupSide";
             this.comboBoxPopupSide.Size = new System.Drawing.Size(139, 21);
             this.comboBoxPopupSide.TabIndex = 10;
@@ -199,7 +146,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(47, 87);
+            this.label3.Location = new System.Drawing.Point(24, 201);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(78, 13);
             this.label3.TabIndex = 11;
@@ -209,56 +156,158 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(60, 113);
+            this.label4.Location = new System.Drawing.Point(37, 228);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(65, 13);
             this.label4.TabIndex = 12;
             this.label4.Text = "Popup Side:";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // dataGridViewKeybinds
+            // 
+            this.dataGridViewKeybinds.AllowUserToAddRows = false;
+            this.dataGridViewKeybinds.AllowUserToDeleteRows = false;
+            this.dataGridViewKeybinds.AllowUserToResizeColumns = false;
+            this.dataGridViewKeybinds.AllowUserToResizeRows = false;
+            this.dataGridViewKeybinds.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewKeybinds.ColumnHeadersVisible = false;
+            this.dataGridViewKeybinds.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Keybind,
+            this.Process,
+            this.Delete});
+            this.dataGridViewKeybinds.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.dataGridViewKeybinds.Location = new System.Drawing.Point(6, 19);
+            this.dataGridViewKeybinds.MultiSelect = false;
+            this.dataGridViewKeybinds.Name = "dataGridViewKeybinds";
+            this.dataGridViewKeybinds.RowHeadersVisible = false;
+            this.dataGridViewKeybinds.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridViewKeybinds.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dataGridViewKeybinds.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.dataGridViewKeybinds.Size = new System.Drawing.Size(357, 125);
+            this.dataGridViewKeybinds.TabIndex = 13;
+            this.dataGridViewKeybinds.TabStop = false;
+            this.dataGridViewKeybinds.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewKeybinds_CellContentClick);
+            this.dataGridViewKeybinds.SelectionChanged += new System.EventHandler(this.dataGridViewKeybinds_SelectionChanged);
+            // 
+            // groupBoxKeybinds
+            // 
+            this.groupBoxKeybinds.Controls.Add(this.buttonAddKeybind);
+            this.groupBoxKeybinds.Controls.Add(this.textBoxAddProcess);
+            this.groupBoxKeybinds.Controls.Add(this.textBoxAddKeybind);
+            this.groupBoxKeybinds.Controls.Add(this.labelAddKeybind);
+            this.groupBoxKeybinds.Controls.Add(this.dataGridViewKeybinds);
+            this.groupBoxKeybinds.Location = new System.Drawing.Point(12, 12);
+            this.groupBoxKeybinds.Name = "groupBoxKeybinds";
+            this.groupBoxKeybinds.Size = new System.Drawing.Size(369, 178);
+            this.groupBoxKeybinds.TabIndex = 14;
+            this.groupBoxKeybinds.TabStop = false;
+            this.groupBoxKeybinds.Text = "Keybinds";
+            // 
+            // buttonAddKeybind
+            // 
+            this.buttonAddKeybind.Location = new System.Drawing.Point(332, 148);
+            this.buttonAddKeybind.Name = "buttonAddKeybind";
+            this.buttonAddKeybind.Size = new System.Drawing.Size(28, 23);
+            this.buttonAddKeybind.TabIndex = 17;
+            this.buttonAddKeybind.Text = "+";
+            this.buttonAddKeybind.UseVisualStyleBackColor = true;
+            this.buttonAddKeybind.Click += new System.EventHandler(this.buttonAddKeybind_Click);
+            // 
+            // textBoxAddProcess
+            // 
+            this.textBoxAddProcess.Location = new System.Drawing.Point(199, 150);
+            this.textBoxAddProcess.Name = "textBoxAddProcess";
+            this.textBoxAddProcess.Size = new System.Drawing.Size(127, 20);
+            this.textBoxAddProcess.TabIndex = 16;
+            this.textBoxAddProcess.Text = "ProcessName.exe";
+            // 
+            // textBoxAddKeybind
+            // 
+            this.textBoxAddKeybind.Location = new System.Drawing.Point(79, 150);
+            this.textBoxAddKeybind.Name = "textBoxAddKeybind";
+            this.textBoxAddKeybind.Size = new System.Drawing.Size(114, 20);
+            this.textBoxAddKeybind.TabIndex = 15;
+            this.textBoxAddKeybind.Text = "Enter Modifier...";
+            this.textBoxAddKeybind.TextChanged += new System.EventHandler(this.textBoxAddKeybind_TextChanged);
+            this.textBoxAddKeybind.Enter += new System.EventHandler(this.textBoxAddKeybind_Enter);
+            this.textBoxAddKeybind.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxAddKeybind_KeyPress);
+            this.textBoxAddKeybind.Leave += new System.EventHandler(this.textBoxAddKeybind_Leave);
+            // 
+            // labelAddKeybind
+            // 
+            this.labelAddKeybind.AutoSize = true;
+            this.labelAddKeybind.Location = new System.Drawing.Point(3, 153);
+            this.labelAddKeybind.Name = "labelAddKeybind";
+            this.labelAddKeybind.Size = new System.Drawing.Size(70, 13);
+            this.labelAddKeybind.TabIndex = 14;
+            this.labelAddKeybind.Text = "Add Keybind:";
+            // 
+            // Keybind
+            // 
+            dataGridViewCellStyle1.NullValue = "New Keybind";
+            this.Keybind.DefaultCellStyle = dataGridViewCellStyle1;
+            this.Keybind.HeaderText = "Keybind";
+            this.Keybind.Name = "Keybind";
+            this.Keybind.ReadOnly = true;
+            this.Keybind.Width = 156;
+            // 
+            // Process
+            // 
+            this.Process.HeaderText = "Process";
+            this.Process.Name = "Process";
+            this.Process.ReadOnly = true;
+            this.Process.Width = 156;
+            // 
+            // Delete
+            // 
+            this.Delete.HeaderText = "X";
+            this.Delete.MinimumWidth = 25;
+            this.Delete.Name = "Delete";
+            this.Delete.ReadOnly = true;
+            this.Delete.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Delete.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Delete.Text = "X";
+            this.Delete.ToolTipText = "Delete this keybind.";
+            this.Delete.UseColumnTextForButtonValue = true;
+            this.Delete.Width = 25;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 171);
+            this.ClientSize = new System.Drawing.Size(394, 301);
+            this.Controls.Add(this.groupBoxKeybinds);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.comboBoxPopupSide);
             this.Controls.Add(this.comboBoxPopupScreen);
             this.Controls.Add(this.checkBoxStartMinimized);
-            this.Controls.Add(this.numericUpDown1);
+            this.Controls.Add(this.numericUpDownVolumeIncrement);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.textBoxCtrlAltProgram);
-            this.Controls.Add(this.labelCtrlAlt);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBoxCtrlShiftProgram);
-            this.Controls.Add(this.labelCtrlShift);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(300, 210);
-            this.MinimumSize = new System.Drawing.Size(300, 210);
+            this.MaximumSize = new System.Drawing.Size(410, 340);
+            this.MinimumSize = new System.Drawing.Size(410, 340);
             this.Name = "MainForm";
             this.Text = "KeyboardMixer";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.Activated += new System.EventHandler(this.MainForm_Activated);
+            this.Deactivate += new System.EventHandler(this.MainForm_Deactivate);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVolumeIncrement)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewKeybinds)).EndInit();
+            this.groupBoxKeybinds.ResumeLayout(false);
+            this.groupBoxKeybinds.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Label labelCtrlShift;
-        private System.Windows.Forms.TextBox textBoxCtrlShiftProgram;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBoxCtrlAltProgram;
-        private System.Windows.Forms.Label labelCtrlAlt;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown numericUpDownVolumeIncrement;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox checkBoxStartMinimized;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
@@ -267,6 +316,15 @@
         private System.Windows.Forms.ComboBox comboBoxPopupSide;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        public System.Windows.Forms.DataGridView dataGridViewKeybinds;
+        private System.Windows.Forms.GroupBox groupBoxKeybinds;
+        private System.Windows.Forms.Button buttonAddKeybind;
+        private System.Windows.Forms.TextBox textBoxAddProcess;
+        private System.Windows.Forms.TextBox textBoxAddKeybind;
+        private System.Windows.Forms.Label labelAddKeybind;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Keybind;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Process;
+        private System.Windows.Forms.DataGridViewButtonColumn Delete;
     }
 }
 

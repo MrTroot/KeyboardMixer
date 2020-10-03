@@ -43,7 +43,7 @@
             this.labelBoxBg.Location = new System.Drawing.Point(2, 3);
             this.labelBoxBg.Margin = new System.Windows.Forms.Padding(0);
             this.labelBoxBg.Name = "labelBoxBg";
-            this.labelBoxBg.Size = new System.Drawing.Size(72, 244);
+            this.labelBoxBg.Size = new System.Drawing.Size(72, 249);
             this.labelBoxBg.TabIndex = 1;
             this.labelBoxBg.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -53,7 +53,7 @@
             this.labelAppName.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelAppName.ForeColor = System.Drawing.Color.White;
             this.labelAppName.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.labelAppName.Location = new System.Drawing.Point(5, 226);
+            this.labelAppName.Location = new System.Drawing.Point(5, 230);
             this.labelAppName.Margin = new System.Windows.Forms.Padding(0);
             this.labelAppName.Name = "labelAppName";
             this.labelAppName.Size = new System.Drawing.Size(69, 21);
@@ -64,7 +64,7 @@
             // pictureBox
             // 
             this.pictureBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(46)))), ((int)(((byte)(46)))));
-            this.pictureBox.Location = new System.Drawing.Point(22, 191);
+            this.pictureBox.Location = new System.Drawing.Point(22, 198);
             this.pictureBox.Name = "pictureBox";
             this.pictureBox.Size = new System.Drawing.Size(32, 32);
             this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -76,7 +76,7 @@
             this.labelBoxSlider.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(106)))), ((int)(((byte)(106)))));
             this.labelBoxSlider.ForeColor = System.Drawing.Color.White;
             this.labelBoxSlider.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.labelBoxSlider.Location = new System.Drawing.Point(31, 6);
+            this.labelBoxSlider.Location = new System.Drawing.Point(31, 13);
             this.labelBoxSlider.Margin = new System.Windows.Forms.Padding(0);
             this.labelBoxSlider.Name = "labelBoxSlider";
             this.labelBoxSlider.Size = new System.Drawing.Size(14, 177);
@@ -89,7 +89,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Red;
-            this.ClientSize = new System.Drawing.Size(76, 249);
+            this.ClientSize = new System.Drawing.Size(76, 255);
             this.ControlBox = false;
             this.Controls.Add(this.labelBoxSlider);
             this.Controls.Add(this.pictureBox);

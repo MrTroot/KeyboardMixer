@@ -7,8 +7,8 @@ namespace KeyboardMixer
 {
     public partial class PopupForm : Form
     {
-        //Reference to the application's main form
-        MainForm mainForm;
+        //Reference to the mixer managger
+        private MixerManager mixerManager;
 
         //Timer to remove the popup after a couple of seconds
         Timer timer = new Timer();
@@ -19,9 +19,9 @@ namespace KeyboardMixer
         int currentPID;
         int currentVolume;
 
-        public PopupForm(MainForm mainForm)
+        public PopupForm(MixerManager mixerManager)
         {
-            this.mainForm = mainForm;
+            this.mixerManager = mixerManager;
             InitializeComponent();
             PlaceWindow();
             this.TransparencyKey = Color.Turquoise;
@@ -52,7 +52,7 @@ namespace KeyboardMixer
         public void PlaceWindow()
         {
             
-            SerializableSettings settings = mainForm.settings;
+            SerializableSettings settings = mixerManager.settings;
 
             Screen correctScreen = Screen.AllScreens[0];
 

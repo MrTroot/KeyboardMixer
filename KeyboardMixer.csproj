@@ -56,6 +56,9 @@
     <StartupObject>
     </StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -75,8 +78,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppVolume.cs" />
+    <Compile Include="config\MixerKeybindEntry.cs" />
     <Compile Include="config\ConfigManager.cs" />
     <Compile Include="hook\GlobalKeyboardHook.cs" />
+    <Compile Include="MixerManager.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -103,6 +108,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

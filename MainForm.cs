@@ -2,37 +2,42 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Linq;
+using KeyboardMixer.config;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace KeyboardMixer
 {
     public partial class MainForm : Form
     {
 
+        [DllImport("user32.dll")]
+        static extern bool HideCaret(IntPtr hWnd);
+
+        //KeyboardMixer Manager
+        private MixerManager mixerManager;
+        //Reference to settings
+        private SerializableSettings settings;
         //The popup slider when the volume is changed
-        private PopupForm popupForm;
-        //Keep cache of sessions and their volumes, as calling for them repeatedly creates a lot of overhead
-        private List<AppVolume> appVolumeCache;
-        private int ticksRenewedCacheAt;
-        //Application settings
-        public SerializableSettings settings;
-        //Keyboard hook
-        private GlobalKeyboardHook globalKeyboardHook;
+        public PopupForm popupForm;
+        //Set to true when exiting the application
+        private bool appClosing = false;
 
         public MainForm()
         {
-            //Load settings
-            settings = ConfigManager.ReadConfig();
+            //Init mixer manager
+            mixerManager = new MixerManager(this);
+            //reference to settings
+            settings = mixerManager.settings;
 
             //Init UI
             InitializeComponent();
-            popupForm = new PopupForm(this);
+            popupForm = new PopupForm(mixerManager);
             comboBoxPopupScreen.DataSource = Enum.GetValues(typeof(PopupScreen));
             comboBoxPopupSide.DataSource = Enum.GetValues(typeof(PopupSide));
 
             //Change controls to match the settings
-            textBoxCtrlShiftProgram.Text = settings.ctrlShiftProgram;
-            textBoxCtrlAltProgram.Text = settings.ctrlAltProgram;
-            numericUpDown1.Value = settings.volumeStep;
+            numericUpDownVolumeIncrement.Value = settings.volumeStep;
             checkBoxStartMinimized.Checked = settings.startMinimized;
             comboBoxPopupScreen.SelectedItem = settings.popupScreen;
             comboBoxPopupSide.SelectedItem = settings.popupSide;
@@ -44,211 +49,11 @@ namespace KeyboardMixer
                 this.ShowInTaskbar = false;
             }
 
-            //Init volume app cache
-            RenewCachedValues();
-
-            //Init hotkeys
-            globalKeyboardHook = new GlobalKeyboardHook();
-            globalKeyboardHook.HookedKeys.Add(Keys.VolumeUp);
-            globalKeyboardHook.HookedKeys.Add(Keys.VolumeDown);
-            globalKeyboardHook.HookedKeys.Add(Keys.LControlKey);
-            globalKeyboardHook.HookedKeys.Add(Keys.RControlKey);
-            globalKeyboardHook.HookedKeys.Add(Keys.LShiftKey);
-            globalKeyboardHook.HookedKeys.Add(Keys.RShiftKey);
-            globalKeyboardHook.HookedKeys.Add(Keys.LMenu);
-            globalKeyboardHook.HookedKeys.Add(Keys.RMenu);
-            globalKeyboardHook.KeyDown += new KeyEventHandler(OnKeyDown);
-            globalKeyboardHook.KeyUp += new KeyEventHandler(OnKeyUp);
         }
 
-        //Keep track of our keyboard modifiers
-        bool lControl, rControl, lShift, rShift, lAlt, rAlt = false;
-
-        void OnKeyDown(object sender, KeyEventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
-
-            //Check for modifiers
-            if (e.KeyCode == Keys.LControlKey)
-            {
-                lControl = true;
-            }
-            else if (e.KeyCode == Keys.RControlKey)
-            {
-                rControl = true;
-            }
-            else if (e.KeyCode == Keys.LShiftKey)
-            {
-                lShift = true;
-            }
-            else if (e.KeyCode == Keys.RShiftKey)
-            {
-                rShift = true;
-            }
-            else if (e.KeyCode == Keys.LMenu)
-            {
-                lAlt = true;
-            }
-            else if (e.KeyCode == Keys.RMenu)
-            {
-                rAlt = true;
-            }
-            //Check for volume keys
-            else if (e.KeyCode == Keys.VolumeUp)
-            {
-                if (CtrlDown() && !AltDown() && !ShiftDown()) //Ctrl VolUp
-                {
-                    TryStepApplicationVolume(ProcessHook.GetActiveProcessFileName(), settings.volumeStep);
-                    e.Handled = true;
-                }
-                else if (CtrlDown() && !AltDown() && ShiftDown()) //Ctrl Shift VolUp
-                {
-                    if (settings.ctrlShiftProgram != "")
-                    {
-                        TryStepApplicationVolume(settings.ctrlShiftProgram, settings.volumeStep);
-                        e.Handled = true;
-                    }
-                }
-                else if (CtrlDown() && AltDown() && !ShiftDown()) //Ctrl Alt VolUp
-                {
-                    if (settings.ctrlAltProgram != "")
-                    {
-                        TryStepApplicationVolume(settings.ctrlAltProgram, settings.volumeStep);
-                        e.Handled = true;
-                    }
-                }
-
-
-            }
-            else if (e.KeyCode == Keys.VolumeDown)
-            {
-                if (CtrlDown() && !AltDown() && !ShiftDown()) //Ctrl VolDown
-                {
-                    TryStepApplicationVolume(ProcessHook.GetActiveProcessFileName(), -settings.volumeStep);
-                    e.Handled = true;
-                }
-                else if (CtrlDown() && !AltDown() && ShiftDown()) //Ctrl Shift VolDown
-                {
-                    if (settings.ctrlShiftProgram != "")
-                    {
-                        TryStepApplicationVolume(settings.ctrlShiftProgram, -settings.volumeStep);
-                        e.Handled = true;
-                    }
-                }
-                else if (CtrlDown() && AltDown() && !ShiftDown()) //Ctrl Alt VolDown
-                {
-                    if (settings.ctrlAltProgram != "")
-                    {
-                        TryStepApplicationVolume(settings.ctrlAltProgram, -settings.volumeStep);
-                        e.Handled = true;
-                    }
-                }
-            }
-
-        }
-
-        void OnKeyUp(object sender, KeyEventArgs e)
-        {
-            //Check for modifiers
-            if (e.KeyCode == Keys.LControlKey)
-            {
-                lControl = false;
-            }
-            else if (e.KeyCode == Keys.RControlKey)
-            {
-                rControl = false;
-            }
-            else if (e.KeyCode == Keys.LShiftKey)
-            {
-                lShift = false;
-            }
-            else if (e.KeyCode == Keys.RShiftKey)
-            {
-                rShift = false;
-            }
-            else if (e.KeyCode == Keys.LMenu)
-            {
-                lAlt = false;
-            }
-            else if (e.KeyCode == Keys.RMenu)
-            {
-                rAlt = false;
-            }
-        }
-
-        bool CtrlDown()
-        {
-            return lControl || rControl;
-        }
-        bool AltDown()
-        {
-            return lAlt || rAlt;
-        }
-        bool ShiftDown()
-        {
-            return lShift || rShift;
-        }
-
-        private void TryStepApplicationVolume(String configuredIdentifier, float stepAmount)
-        {
-            //Renew volume cache if it is at least 4 seconds old
-            if (Environment.TickCount - ticksRenewedCacheAt > 4000)
-            {
-                RenewCachedValues();
-            }
-
-            //get sessions whose identifier match the given one
-            var matchingApps = appVolumeCache.Where(app => app.Identifier.IndexOf(configuredIdentifier, System.StringComparison.CurrentCultureIgnoreCase) >= 0).ToList();
-
-            if (matchingApps.Any())
-            {
-                float newVolume = matchingApps.First().Volume + stepAmount;
-                newVolume = Math.Min(100, newVolume);
-                newVolume = Math.Max(0, newVolume);
-                //adjust cached volumes to the new volume
-                matchingApps.ForEach(app => app.Volume = newVolume);
-                //set volume for all matching groups
-                matchingApps.Select(app => app.Guid).Distinct().ToList().ForEach(guid =>
-                    VolumeHook.SetApplicationVolumeByGroup(guid, newVolume)
-                );
-
-                popupForm.ShowSlider((int)newVolume, matchingApps.First().Pid);
-            }
-
-        }
-
-        //Renews the application and volume cache
-        private void RenewCachedValues()
-        {
-            appVolumeCache = VolumeHook.getVolumes();
-            ticksRenewedCacheAt = Environment.TickCount;
-        }
-
-        #region Control Events
-
-        private void ToolStripMenuItemExit_Click(object sender, EventArgs e)
-        {
-            //Close the program when exit is clicked.
-            Close();
-        }
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            //Write config on application exit
-            ConfigManager.WriteConfig(settings);
-        }
-
-        private void TextBoxCtrlShiftProgram_TextChanged(object sender, EventArgs e)
-        {
-            RenewCachedValues();
-            settings.ctrlShiftProgram = textBoxCtrlShiftProgram.Text;
-            ConfigManager.WriteConfig(settings);
-        }
-
-        private void TextBoxCtrlAltProgram_TextChanged(object sender, EventArgs e)
-        {
-            RenewCachedValues();
-            settings.ctrlAltProgram = textBoxCtrlAltProgram.Text;
-            ConfigManager.WriteConfig(settings);
+            resetDataGrid();
         }
 
         private void CheckBoxStartMinimized_CheckedChanged(object sender, EventArgs e)
@@ -261,7 +66,6 @@ namespace KeyboardMixer
         {
             settings.popupScreen = (PopupScreen)comboBoxPopupScreen.SelectedItem;
             popupForm.PlaceWindow();
-            ConfigManager.WriteConfig(settings);
         }
         private void ComboBoxPopupSide_SelectionChangeCommitted(object sender, EventArgs e)
         {
@@ -270,21 +74,10 @@ namespace KeyboardMixer
             ConfigManager.WriteConfig(settings);
         }
 
-        private void NumericUpDown1_ValueChanged(object sender, EventArgs e)
+        private void numericUpDownVolumeIncrement_ValueChanged(object sender, EventArgs e)
         {
-            settings.volumeStep = (int)numericUpDown1.Value;
+            settings.volumeStep = (int)numericUpDownVolumeIncrement.Value;
             ConfigManager.WriteConfig(settings);
-        }
-
-        private void Form1_Resize(object sender, EventArgs e)
-        {
-            //if the form is minimized  
-            //hide it from the task bar  
-            //and show the system tray icon (represented by the NotifyIcon control)  
-            if (this.WindowState == FormWindowState.Minimized)
-            {
-                Hide();
-            }
         }
 
         private void NotifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -296,8 +89,148 @@ namespace KeyboardMixer
             this.Focus();
         }
 
-        #endregion
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!appClosing)
+            {
+                e.Cancel = true;
+                WindowState = FormWindowState.Minimized;
+            }
+        }
+
+        private void ToolStripMenuItemExit_Click(object sender, EventArgs e)
+        {
+            //Write config on application exit
+            ConfigManager.WriteConfig(settings);
+            //Set to true so that the close event is not cancelled
+            appClosing = true;
+            //Close the program when exit is clicked.
+            Close();
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            //if the form is minimized  
+            //hide it from the task bar
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                Hide();
+            }
+        }
+
+        private void dataGridViewKeybinds_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+            if (dataGridViewKeybinds.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
+                e.RowIndex > 0)
+            {
+                string gridProcessName = dataGridViewKeybinds.Rows[e.RowIndex].Cells["Process"].Value.ToString();
+
+                settings.keybinds.RemoveAll(keybind =>
+                    string.Equals(keybind.ProcessName, gridProcessName, StringComparison.InvariantCultureIgnoreCase)
+                );
+                resetDataGrid();
+                ConfigManager.WriteConfig(settings);
+            }
+        }
+
+        private void dataGridViewKeybinds_SelectionChanged(object sender, EventArgs e)
+        {
+            dataGridViewKeybinds.ClearSelection();
+        }
+
+        private void MainForm_Activated(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainForm_Deactivate(object sender, EventArgs e)
+        {
+            mixerManager.StopListening();
+        }
+
+        private void textBoxAddKeybind_Enter(object sender, EventArgs e)
+        {
+            mixerManager.detectedNewKeybind = null;
+            mixerManager.StartListening();
+        }
+
+        private void textBoxAddKeybind_Leave(object sender, EventArgs e)
+        {
+            mixerManager.StopListening();
+        }
+
+        private void textBoxAddKeybind_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void textBoxAddKeybind_TextChanged(object sender, EventArgs e)
+        {
+            HideCaret(textBoxAddKeybind.Handle);
+        }
+
+        private void buttonAddKeybind_Click(object sender, EventArgs e)
+        {
+            //check contraints
+            if (mixerManager.detectedNewKeybind == null)
+            {
+                return;
+            }
+            if (textBoxAddProcess.Text == "")
+            {
+                return;
+            }
+
+            //new keybind
+            var newKeybind = new MixerKeybindEntry()
+            {
+                KeyList = mixerManager.detectedNewKeybind,
+                ProcessName = textBoxAddProcess.Text,
+            };
+
+            //make sure it dont exist
+            if (settings.keybinds.Any(keybind => keybind.KeyList.Equals(newKeybind.KeyList) || keybind.ProcessName.Equals(newKeybind.ProcessName, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                MessageBox.Show("Keybind already exists.", "KeyboardMixer");
+                return;
+            }
+            else //add keybind to settings
+            {
+                settings.keybinds.Add(newKeybind);
+            }
+
+            resetDataGrid();
+
+            ConfigManager.WriteConfig(settings);
+        }
+
+        public void resetDataGrid()
+        {
+            dataGridViewKeybinds.Rows.Clear();
+
+            dataGridViewKeybinds.Rows.Add(new string[] { "Ctrl+Vol", "Current Application" });
+
+            DataGridViewTextBoxCell textBoxCell = new DataGridViewTextBoxCell();
+            this.dataGridViewKeybinds[2, 0] = textBoxCell;
+            this.dataGridViewKeybinds[2, 0].Value = "";
+
+            foreach (MixerKeybindEntry keybind in settings.keybinds)
+            {
+                dataGridViewKeybinds.Rows.Add(new string[] { keybind.ToString(), keybind.ProcessName });
+            }
+        }
+
+        public void updateNewKeybindField(Keys[] newKeyBind)
+        {
+            textBoxAddKeybind.Text = MixerKeybindEntry.FromKeyArray(newKeyBind);
+        }
+
+        public void resetNewKeybindField()
+        {
+            textBoxAddKeybind.Text = "Enter Modifier...";
+        }
+
 
     }
-
 }

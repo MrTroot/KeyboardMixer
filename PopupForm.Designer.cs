@@ -105,7 +105,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.Red;
-            this.Load += new System.EventHandler(this.PopupForm_Load);
             this.VisibleChanged += new System.EventHandler(this.PopupForm_VisibleChanged);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);

@@ -30,28 +30,28 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemExit = new System.Windows.Forms.ToolStripMenuItem();
             this.label2 = new System.Windows.Forms.Label();
-            this.numericUpDownVolumeIncrement = new System.Windows.Forms.NumericUpDown();
+            this.NumericUpDownVolumeIncrement = new System.Windows.Forms.NumericUpDown();
             this.checkBoxStartMinimized = new System.Windows.Forms.CheckBox();
             this.comboBoxPopupScreen = new System.Windows.Forms.ComboBox();
             this.comboBoxPopupSide = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.dataGridViewKeybinds = new System.Windows.Forms.DataGridView();
+            this.Keybind = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Process = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Delete = new System.Windows.Forms.DataGridViewButtonColumn();
             this.groupBoxKeybinds = new System.Windows.Forms.GroupBox();
             this.buttonAddKeybind = new System.Windows.Forms.Button();
             this.textBoxAddProcess = new System.Windows.Forms.TextBox();
             this.textBoxAddKeybind = new System.Windows.Forms.TextBox();
             this.labelAddKeybind = new System.Windows.Forms.Label();
-            this.Keybind = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Process = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Delete = new System.Windows.Forms.DataGridViewButtonColumn();
             this.contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVolumeIncrement)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownVolumeIncrement)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewKeybinds)).BeginInit();
             this.groupBoxKeybinds.SuspendLayout();
             this.SuspendLayout();
@@ -88,29 +88,29 @@
             this.label2.Text = "Volume Increment:";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // numericUpDownVolumeIncrement
+            // NumericUpDownVolumeIncrement
             // 
-            this.numericUpDownVolumeIncrement.Location = new System.Drawing.Point(108, 252);
-            this.numericUpDownVolumeIncrement.Maximum = new decimal(new int[] {
+            this.NumericUpDownVolumeIncrement.Location = new System.Drawing.Point(108, 252);
+            this.NumericUpDownVolumeIncrement.Maximum = new decimal(new int[] {
             8,
             0,
             0,
             0});
-            this.numericUpDownVolumeIncrement.Minimum = new decimal(new int[] {
+            this.NumericUpDownVolumeIncrement.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numericUpDownVolumeIncrement.Name = "numericUpDownVolumeIncrement";
-            this.numericUpDownVolumeIncrement.Size = new System.Drawing.Size(36, 20);
-            this.numericUpDownVolumeIncrement.TabIndex = 7;
-            this.numericUpDownVolumeIncrement.TabStop = false;
-            this.numericUpDownVolumeIncrement.Value = new decimal(new int[] {
+            this.NumericUpDownVolumeIncrement.Name = "NumericUpDownVolumeIncrement";
+            this.NumericUpDownVolumeIncrement.Size = new System.Drawing.Size(36, 20);
+            this.NumericUpDownVolumeIncrement.TabIndex = 7;
+            this.NumericUpDownVolumeIncrement.TabStop = false;
+            this.NumericUpDownVolumeIncrement.Value = new decimal(new int[] {
             2,
             0,
             0,
             0});
-            this.numericUpDownVolumeIncrement.ValueChanged += new System.EventHandler(this.numericUpDownVolumeIncrement_ValueChanged);
+            this.NumericUpDownVolumeIncrement.ValueChanged += new System.EventHandler(this.NumericUpDownVolumeIncrement_ValueChanged);
             // 
             // checkBoxStartMinimized
             // 
@@ -189,6 +189,35 @@
             this.dataGridViewKeybinds.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewKeybinds_CellContentClick);
             this.dataGridViewKeybinds.SelectionChanged += new System.EventHandler(this.dataGridViewKeybinds_SelectionChanged);
             // 
+            // Keybind
+            // 
+            dataGridViewCellStyle2.NullValue = "New Keybind";
+            this.Keybind.DefaultCellStyle = dataGridViewCellStyle2;
+            this.Keybind.HeaderText = "Keybind";
+            this.Keybind.Name = "Keybind";
+            this.Keybind.ReadOnly = true;
+            this.Keybind.Width = 156;
+            // 
+            // Process
+            // 
+            this.Process.HeaderText = "Process";
+            this.Process.Name = "Process";
+            this.Process.ReadOnly = true;
+            this.Process.Width = 156;
+            // 
+            // Delete
+            // 
+            this.Delete.HeaderText = "X";
+            this.Delete.MinimumWidth = 25;
+            this.Delete.Name = "Delete";
+            this.Delete.ReadOnly = true;
+            this.Delete.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Delete.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Delete.Text = "X";
+            this.Delete.ToolTipText = "Delete this keybind.";
+            this.Delete.UseColumnTextForButtonValue = true;
+            this.Delete.Width = 25;
+            // 
             // groupBoxKeybinds
             // 
             this.groupBoxKeybinds.Controls.Add(this.buttonAddKeybind);
@@ -242,35 +271,6 @@
             this.labelAddKeybind.TabIndex = 14;
             this.labelAddKeybind.Text = "Add Keybind:";
             // 
-            // Keybind
-            // 
-            dataGridViewCellStyle1.NullValue = "New Keybind";
-            this.Keybind.DefaultCellStyle = dataGridViewCellStyle1;
-            this.Keybind.HeaderText = "Keybind";
-            this.Keybind.Name = "Keybind";
-            this.Keybind.ReadOnly = true;
-            this.Keybind.Width = 156;
-            // 
-            // Process
-            // 
-            this.Process.HeaderText = "Process";
-            this.Process.Name = "Process";
-            this.Process.ReadOnly = true;
-            this.Process.Width = 156;
-            // 
-            // Delete
-            // 
-            this.Delete.HeaderText = "X";
-            this.Delete.MinimumWidth = 25;
-            this.Delete.Name = "Delete";
-            this.Delete.ReadOnly = true;
-            this.Delete.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Delete.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Delete.Text = "X";
-            this.Delete.ToolTipText = "Delete this keybind.";
-            this.Delete.UseColumnTextForButtonValue = true;
-            this.Delete.Width = 25;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -282,7 +282,7 @@
             this.Controls.Add(this.comboBoxPopupSide);
             this.Controls.Add(this.comboBoxPopupScreen);
             this.Controls.Add(this.checkBoxStartMinimized);
-            this.Controls.Add(this.numericUpDownVolumeIncrement);
+            this.Controls.Add(this.NumericUpDownVolumeIncrement);
             this.Controls.Add(this.label2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -296,7 +296,7 @@
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVolumeIncrement)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownVolumeIncrement)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewKeybinds)).EndInit();
             this.groupBoxKeybinds.ResumeLayout(false);
             this.groupBoxKeybinds.PerformLayout();
@@ -307,7 +307,7 @@
 
         #endregion
         private System.Windows.Forms.NotifyIcon notifyIcon1;
-        private System.Windows.Forms.NumericUpDown numericUpDownVolumeIncrement;
+        private System.Windows.Forms.NumericUpDown NumericUpDownVolumeIncrement;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox checkBoxStartMinimized;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;

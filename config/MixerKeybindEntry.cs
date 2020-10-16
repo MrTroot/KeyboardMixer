@@ -49,6 +49,20 @@ namespace KeyboardMixer.config
                     return "9";
                 case Keys.D0:
                     return "0";
+                case Keys.OemOpenBrackets:
+                    return "[";
+                case Keys.OemCloseBrackets:
+                    return "]";
+                case Keys.OemPeriod:
+                    return ".";
+                case Keys.Oemcomma:
+                    return ",";
+                case Keys.OemQuestion:
+                    return "?";
+                case Keys.Oemplus:
+                    return "Plus";
+                case Keys.OemMinus:
+                    return "Minus";
                 default:
                     return key.ToString();
             }

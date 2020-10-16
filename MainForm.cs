@@ -37,7 +37,7 @@ namespace KeyboardMixer
             comboBoxPopupSide.DataSource = Enum.GetValues(typeof(PopupSide));
 
             //Change controls to match the settings
-            numericUpDownVolumeIncrement.Value = settings.volumeStep;
+            NumericUpDownVolumeIncrement.Value = settings.volumeStep;
             checkBoxStartMinimized.Checked = settings.startMinimized;
             comboBoxPopupScreen.SelectedItem = settings.popupScreen;
             comboBoxPopupSide.SelectedItem = settings.popupSide;
@@ -74,9 +74,9 @@ namespace KeyboardMixer
             ConfigManager.WriteConfig(settings);
         }
 
-        private void numericUpDownVolumeIncrement_ValueChanged(object sender, EventArgs e)
+        private void NumericUpDownVolumeIncrement_ValueChanged(object sender, EventArgs e)
         {
-            settings.volumeStep = (int)numericUpDownVolumeIncrement.Value;
+            settings.volumeStep = (int)NumericUpDownVolumeIncrement.Value;
             ConfigManager.WriteConfig(settings);
         }
 
@@ -91,6 +91,10 @@ namespace KeyboardMixer
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (e.CloseReason == CloseReason.WindowsShutDown) return;
+            if (e.CloseReason == CloseReason.ApplicationExitCall) return;
+            if (e.CloseReason == CloseReason.TaskManagerClosing) return;
+
             if (!appClosing)
             {
                 e.Cancel = true;
@@ -190,7 +194,7 @@ namespace KeyboardMixer
             };
 
             //make sure it dont exist
-            if (settings.keybinds.Any(keybind => keybind.KeyList.Equals(newKeybind.KeyList) || keybind.ProcessName.Equals(newKeybind.ProcessName, StringComparison.InvariantCultureIgnoreCase)))
+            if (settings.keybinds.Any(keybind => areKeybindsEqual(keybind.KeyList, newKeybind.KeyList) || keybind.ProcessName.Equals(newKeybind.ProcessName, StringComparison.InvariantCultureIgnoreCase)))
             {
                 MessageBox.Show("Keybind already exists.", "KeyboardMixer");
                 return;
@@ -232,5 +236,9 @@ namespace KeyboardMixer
         }
 
 
+        private static bool areKeybindsEqual(Keys[] binding1, Keys[] binding2)
+        {
+            return binding1.OrderBy(i => i).SequenceEqual(binding2.OrderBy(i => i));
+        }
     }
 }

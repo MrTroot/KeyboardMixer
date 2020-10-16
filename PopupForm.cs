@@ -19,6 +19,18 @@ namespace KeyboardMixer
         int currentPID;
         int currentVolume;
 
+        /// From MSDN <see cref="https://docs.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles"/>
+        /// A top-level window created with this style does not become the 
+        /// foreground window when the user clicks it. The system does not 
+        /// bring this window to the foreground when the user minimizes or 
+        /// closes the foreground window. The window should not be activated 
+        /// through programmatic access or via keyboard navigation by accessible 
+        /// technology, such as Narrator. To activate the window, use the 
+        /// SetActiveWindow or SetForegroundWindow function. The window does not 
+        /// appear on the taskbar by default. To force the window to appear on 
+        /// the taskbar, use the WS_EX_APPWINDOW style.
+        private const int WS_EX_NOACTIVATE = 0x08000000;
+
         public PopupForm(MixerManager mixerManager)
         {
             this.mixerManager = mixerManager;
@@ -30,6 +42,17 @@ namespace KeyboardMixer
             timer.Interval = 500;
             timer.Tick += new EventHandler(Timer_Tick);
             
+        }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var createParams = base.CreateParams;
+
+                createParams.ExStyle |= WS_EX_NOACTIVATE;
+                return createParams;
+            }
         }
 
         void Timer_Tick(object sender, EventArgs e)
@@ -163,11 +186,6 @@ namespace KeyboardMixer
 
             brushWhite.Dispose();
             brushBlue.Dispose();
-        }
-
-        private void PopupForm_Load(object sender, EventArgs e)
-        {
-
         }
     }
 

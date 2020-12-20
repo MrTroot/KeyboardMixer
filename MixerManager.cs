@@ -45,6 +45,7 @@ namespace KeyboardMixer
             ticksRenewedCacheAt = Environment.TickCount;
         }
 
+        //Called every time a key is pressed down
         void OnKeyDown(object sender, KeyEventArgs e)
         {
             if (listeningForKeybind)
@@ -82,9 +83,13 @@ namespace KeyboardMixer
             
         }
 
+        //Called when the VolUp or VolDown key is detected
         private void OnVolumePressed(KeyEventArgs e)
         {
-            foreach (MixerKeybindEntry keybind in settings.keybinds)
+            //Order keybinds by most complex (more keys) to least complex. This prevents issues with keybinds conflicting when they share some of the same keys.
+            List<MixerKeybindEntry> sortedKeybinds = settings.keybinds.OrderBy(keybind => -keybind.KeyList.Length).ToList();
+
+            foreach (MixerKeybindEntry keybind in sortedKeybinds)
             {
                 bool allMatch = true;
                 foreach (Keys requiredKey in keybind.KeyList)
@@ -115,6 +120,7 @@ namespace KeyboardMixer
             listeningForKeybind = false;
         }
 
+        //Detects currently held keys and passes back to the main form
         private void DetectNewKeybind(KeyEventArgs e)
         {
             detectedNewKeybind = globalKeyboardHook.KeyTable

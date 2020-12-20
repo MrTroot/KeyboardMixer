@@ -111,7 +111,6 @@ namespace KeyboardMixer
 
         public void StartListeningKeybind()
         {
-            Console.WriteLine("start");
             if (!listeningForKeybind)
             {
                 listeningForKeybind = true;
@@ -121,7 +120,6 @@ namespace KeyboardMixer
 
         public void StopListeningKeybind()
         {
-            Console.WriteLine("stop");
             listeningForKeybind = false;
         }
 

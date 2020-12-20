@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemExit = new System.Windows.Forms.ToolStripMenuItem();
@@ -191,8 +191,8 @@
             // 
             // Keybind
             // 
-            dataGridViewCellStyle2.NullValue = "New Keybind";
-            this.Keybind.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.NullValue = "New Keybind";
+            this.Keybind.DefaultCellStyle = dataGridViewCellStyle1;
             this.Keybind.HeaderText = "Keybind";
             this.Keybind.Name = "Keybind";
             this.Keybind.ReadOnly = true;
@@ -294,6 +294,7 @@
             this.Deactivate += new System.EventHandler(this.MainForm_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MainForm_MouseDown);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownVolumeIncrement)).EndInit();

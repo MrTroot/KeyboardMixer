@@ -145,32 +145,39 @@ namespace KeyboardMixer
 
         private void MainForm_Activated(object sender, EventArgs e)
         {
-
         }
 
         private void MainForm_Deactivate(object sender, EventArgs e)
         {
-            mixerManager.StopListening();
+            mixerManager.StopListeningKeybind();
+            //Change active control away from the text box when focus is lost. Prevents focus issues when form is opened and closed
+            this.ActiveControl = labelAddKeybind;
+        }
+
+        private void MainForm_MouseDown(object sender, MouseEventArgs e)
+        {
+            //Change active control away from the text box when an empty space is clicked
+            this.ActiveControl = labelAddKeybind;
         }
 
         private void textBoxAddKeybind_Enter(object sender, EventArgs e)
         {
             mixerManager.detectedNewKeybind = null;
-            mixerManager.StartListening();
+            mixerManager.StartListeningKeybind();
         }
 
         private void textBoxAddKeybind_Leave(object sender, EventArgs e)
         {
-            mixerManager.StopListening();
+            mixerManager.StopListeningKeybind();
         }
 
-        private void textBoxAddKeybind_KeyPress(object sender, KeyPressEventArgs e)
+        private void textBoxAddKeybind_KeyPress(object sender, KeyPressEventArgs e) 
         {
             e.Handled = true;
         }
 
         private void textBoxAddKeybind_TextChanged(object sender, EventArgs e)
-        {
+        { 
             HideCaret(textBoxAddKeybind.Handle);
         }
 
@@ -193,8 +200,8 @@ namespace KeyboardMixer
                 ProcessName = textBoxAddProcess.Text,
             };
 
-            //make sure it dont exist
-            if (settings.keybinds.Any(keybind => areKeybindsEqual(keybind.KeyList, newKeybind.KeyList) || keybind.ProcessName.Equals(newKeybind.ProcessName, StringComparison.InvariantCultureIgnoreCase)))
+            //ensure that the keybind we are trying to add does not already exist
+            if (settings.keybinds.Any(keybind => areKeybindsEqual(keybind.KeyList, newKeybind.KeyList)))
             {
                 MessageBox.Show("Keybind already exists.", "KeyboardMixer");
                 return;

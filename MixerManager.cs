@@ -59,7 +59,7 @@ namespace KeyboardMixer
 
                 return;
             }
-            
+
             //Check for volume keys
             if (e.KeyCode == Keys.VolumeUp || e.KeyCode == Keys.VolumeDown)
             {
@@ -74,13 +74,13 @@ namespace KeyboardMixer
                         e.Handled = true;
                     }
                 }
-                
+
             }
         }
 
         void OnKeyUp(object sender, KeyEventArgs e)
         {
-            
+
         }
 
         //Called when the VolUp or VolDown key is detected
@@ -109,14 +109,19 @@ namespace KeyboardMixer
             }
         }
 
-        public void StartListening()
+        public void StartListeningKeybind()
         {
-            listeningForKeybind = true;
-            mainForm.resetNewKeybindField();
+            Console.WriteLine("start");
+            if (!listeningForKeybind)
+            {
+                listeningForKeybind = true;
+                mainForm.resetNewKeybindField();
+            }
         }
 
-        public void StopListening()
+        public void StopListeningKeybind()
         {
+            Console.WriteLine("stop");
             listeningForKeybind = false;
         }
 

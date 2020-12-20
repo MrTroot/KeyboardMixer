@@ -63,6 +63,8 @@ namespace KeyboardMixer.config
                     return "Plus";
                 case Keys.OemMinus:
                     return "Minus";
+                case Keys.Capital:
+                    return "Caps";
                 default:
                     return key.ToString();
             }

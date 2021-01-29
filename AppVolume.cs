@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KeyboardMixer
 {
@@ -12,6 +8,6 @@ namespace KeyboardMixer
         public int Pid { get; set; }
         public Guid Guid { get; set; }
         public float Volume { get; set; }
-        public String DisplayName { get; set; }
+        public string DisplayName { get; set; }
     }
 }

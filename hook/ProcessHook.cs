@@ -38,15 +38,6 @@ namespace KeyboardMixer
             return Path.GetFileName(GetProcessFilename(p));
         }
 
-        public static bool IsKeyboardMixerActiveProcess()
-        {
-            IntPtr hwnd = GetForegroundWindow();
-            uint pid;
-            GetWindowThreadProcessId(hwnd, out pid);
-
-            return Process.GetCurrentProcess().Id == pid;
-        }
-
         public static Icon GetIconByPID(int pid)
         {
             try

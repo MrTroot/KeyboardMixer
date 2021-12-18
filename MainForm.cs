@@ -118,7 +118,17 @@ namespace KeyboardMixer
             //hide it from the task bar
             if (this.WindowState == FormWindowState.Minimized)
             {
-                Hide();
+                this.Visible = false;
+                this.Opacity = 0;
+                this.FormBorderStyle = FormBorderStyle.FixedToolWindow;
+                this.ShowInTaskbar = false;
+            } 
+            else if (this.WindowState == FormWindowState.Normal)
+            {
+                this.Visible = true;
+                this.Opacity = 100;
+                this.FormBorderStyle = FormBorderStyle.FixedSingle; //or whatever it was previously set to
+                this.ShowInTaskbar = true;
             }
         }
 
